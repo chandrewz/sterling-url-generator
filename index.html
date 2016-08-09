@@ -11,9 +11,13 @@
 		<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/0.26.1/handsontable.full.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.min.js"></script>
 	</head>
 
 	<body>
+		<p>Copy and paste the data or import a .csv</p>
+		<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Email, Phone, URL)</p>
+		<input type="file" id="file">
 		<div id="csv"></div>
 		<button id="csv-generate">Generate URLs</button>
 	</body>
@@ -50,6 +54,23 @@
 				}
 				csvTable.render();
 			});
+
+			$('#file').change(function(e) {
+				var file = e.target.files[0];
+				console.log(file);
+				var papa = Papa.parse(file, {
+					header: false,
+					dynamicTyping: true,
+					complete: function(results) {
+						csvTable.destroy();
+						csvTable = new Handsontable(document.getElementById('csv'), {
+							data: results.data,
+							colHeaders: colHeaders,
+							rowHeaders: true
+						});
+					}
+				});
+			})
 		});
 	</script>
 
