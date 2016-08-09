@@ -15,19 +15,46 @@
 	</head>
 
 	<body>
-		<p>Copy and paste the data or import a .csv</p>
-		<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Email, Phone, URL)</p>
-		<input type="file" id="file">
-		<div id="csv"></div>
-		<button id="csv-generate">Generate URLs</button>
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#appointment" data-toggle="tab" aria-expanded="true">Appointment</a></li>
+			<li class=""><a href="#join-us" data-toggle="tab" aria-expanded="false">Complimentary Dinner</a></li>
+		</ul>
+		<div id="myTabContent" class="tab-content">
+			<div class="tab-pane fade active in" id="appointment">
+				<p>Copy and paste the data or import a .csv</p>
+				<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Email, Phone, URL)</p>
+				<input type="file" id="file">
+				<div id="csv"></div>
+				<button id="csv-generate">Generate URLs</button>
+			</div>
+			<div class="tab-pane fade" id="join-us">
+				<p>Copy and paste the data or import a .csv</p>
+				<p>The imported .csv needs to have the same column headers as the table ('Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email', 'Phone')</p>
+				<input type="file" id="file2">
+				<div id="csv2"></div>
+				<button id="csv-generate2">Generate URLs</button>
+			</div>
+		</div>
 	</body>
 
 	<script>
-		var colHeaders = ['First Name', 'Last Name', 'Email', 'Phone', 'URL'];
-		var paramNames = ['first', 'last', 'email', 'phone'];
+		var colHeaders = ['First Name', 'Last Name', 'Email', 'Phone', 'School District', 'Location', 'URL'];
+		var paramNames = ['first', 'last', 'email', 'phone', 'district', 'location'];
+		var colHeaders2 = ['Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email', 'Phone', 'URL'];
+		var paramNames2 = ['address', 'address2', 'city', 'state', 'zip', 'date', 'time', 'first', 'last', 'email', 'phone'];
 		var csvTable = new Handsontable(document.getElementById('csv'), {
+			data: [colHeaders],
 			colHeaders: colHeaders,
-			rowHeaders: true
+			rowHeaders: true,
+			minSpareRows: 1,
+			copyRowsLimit: 10000
+		});
+		var csvTable2 = new Handsontable(document.getElementById('csv2'), {
+			data: [colHeaders2],
+			colHeaders: colHeaders2,
+			rowHeaders: true,
+			minSpareRows: 1,
+			copyRowsLimit: 10000
 		});
 
 		$(document).ready(function() {
@@ -66,6 +93,47 @@
 						csvTable = new Handsontable(document.getElementById('csv'), {
 							data: results.data,
 							colHeaders: colHeaders,
+							rowHeaders: true
+						});
+					}
+				});
+			})
+
+			$('#csv-generate2').click(function() {
+				data = csvTable2.getData();
+				for (var i = 0; i < data.length; i++) {
+					var row = data[i];
+					var url = 'http://www.sn-fg.com/join-us?';
+					var isFirst = true;
+					for (var j = 0; j < row.length - 1; j++) {
+						if (isFirst && row[j]) {
+							// no & on first parameter
+							url += paramNames2[j] + '=' + row[j];
+							isFirst = false;
+						} else if (row[j]) {
+							url += '&' + paramNames2[j] + '=' + row[j];
+						}
+					}
+
+					// last element, generate URL for row
+					if (j == row.length - 1) {
+						csvTable2.setDataAtCell(i, j, url);
+					}
+				}
+				csvTable2.render();
+			});
+
+			$('#file2').change(function(e) {
+				var file = e.target.files[0];
+				console.log(file);
+				var papa = Papa.parse(file, {
+					header: false,
+					dynamicTyping: true,
+					complete: function(results) {
+						csvTable2.destroy();
+						csvTable2 = new Handsontable(document.getElementById('csv2'), {
+							data: results.data,
+							colHeaders: colHeaders2,
 							rowHeaders: true
 						});
 					}
