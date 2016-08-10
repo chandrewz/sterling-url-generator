@@ -22,7 +22,7 @@
 		<div id="myTabContent" class="tab-content">
 			<div class="tab-pane fade active in" id="appointment">
 				<p>Copy and paste the data or import a .csv</p>
-				<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Email, Phone, URL)</p>
+				<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Email, URL)</p>
 				<input type="file" id="file">
 				Choose reply email
 				<select id="reply">
@@ -38,7 +38,7 @@
 			</div>
 			<div class="tab-pane fade" id="join-us">
 				<p>Copy and paste the data or import a .csv</p>
-				<p>The imported .csv needs to have the same column headers as the table ('Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email', 'Phone')</p>
+				<p>The imported .csv needs to have the same column headers as the table ('Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email')</p>
 				<input type="file" id="file2">
 				<div id="csv2"></div>
 				<button id="csv-generate2">Generate URLs</button>
@@ -47,10 +47,10 @@
 	</body>
 
 	<script>
-		var colHeaders = ['First Name', 'Last Name', 'Email', 'Phone', 'School District', 'Location', 'URL'];
-		var paramNames = ['first', 'last', 'email', 'phone', 'district', 'location'];
-		var colHeaders2 = ['Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email', 'Phone', 'URL'];
-		var paramNames2 = ['address', 'address2', 'city', 'state', 'zip', 'date', 'time', 'first', 'last', 'email', 'phone'];
+		var colHeaders = ['First Name', 'Last Name', 'Email', 'School District', 'Location', 'URL'];
+		var paramNames = ['first', 'last', 'email', 'district', 'location'];
+		var colHeaders2 = ['Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email', 'URL'];
+		var paramNames2 = ['address', 'address2', 'city', 'state', 'zip', 'date', 'time', 'first', 'last', 'email'];
 		var csvTable = new Handsontable(document.getElementById('csv'), {
 			data: [colHeaders],
 			colHeaders: colHeaders,
