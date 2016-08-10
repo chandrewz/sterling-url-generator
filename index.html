@@ -21,9 +21,6 @@
 		</ul>
 		<div id="myTabContent" class="tab-content">
 			<div class="tab-pane fade active in" id="appointment">
-				<p>Copy and paste the data or import a .csv</p>
-				<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Email, URL)</p>
-				<input type="file" id="file">
 				Choose reply email
 				<select id="reply">
 					<option></option>
@@ -33,12 +30,63 @@
 					<option>Madison@s-nfg.com</option>
 					<option>brody@s-nfg.com</option>
 				</select>
+				<p>Copy and paste the data or import a .csv</p>
+				<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Location, School District, Email, URL)</p>
+				<input type="file" id="file">
 				<div id="csv"></div>
-				<button id="csv-generate">Generate URLs</button>
+				<div class="row"><button id="csv-generate">Generate URLs</button></div>
 			</div>
 			<div class="tab-pane fade" id="join-us">
+				<div class="well bs-component">
+					<form id="event-details" class="form-horizontal">
+						<fieldset>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">Address</label>
+								<div class="col-lg-10">
+									<input name="address" type="text" class="form-control" placeholder="Address">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">Address Line 2</label>
+								<div class="col-lg-10">
+									<input name="address2" type="text" class="form-control" placeholder="Address Line 2">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">City</label>
+								<div class="col-lg-10">
+									<input name="city" type="text" class="form-control" placeholder="City">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">State</label>
+								<div class="col-lg-10">
+									<input name="state" type="text" class="form-control" placeholder="Texas">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">ZIP</label>
+								<div class="col-lg-10">
+									<input name="zip" type="text" class="form-control" placeholder="ZIP">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">Date</label>
+								<div class="col-lg-10">
+									<input name="date" type="text" class="form-control" placeholder="MM/DD/YYYY">
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-2 control-label">Time</label>
+								<div class="col-lg-10">
+									<input name="time" type="text" class="form-control" placeholder="07:00 PM">
+								</div>
+							</div>
+						</fieldset>
+					</form>
+				</div>
 				<p>Copy and paste the data or import a .csv</p>
-				<p>The imported .csv needs to have the same column headers as the table ('Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email')</p>
+				<p>The imported .csv needs to have the same column headers as the table ('First Name', 'Last Name', 'Email')</p>
 				<input type="file" id="file2">
 				<div id="csv2"></div>
 				<button id="csv-generate2">Generate URLs</button>
@@ -47,10 +95,10 @@
 	</body>
 
 	<script>
-		var colHeaders = ['First Name', 'Last Name', 'Email', 'School District', 'Location', 'URL'];
-		var paramNames = ['first', 'last', 'email', 'district', 'location'];
-		var colHeaders2 = ['Address', 'Address Line 2', 'City', 'State', 'ZIP', 'Date', 'Time', 'First Name', 'Last Name', 'Email', 'URL'];
-		var paramNames2 = ['address', 'address2', 'city', 'state', 'zip', 'date', 'time', 'first', 'last', 'email'];
+		var colHeaders = ['First Name', 'Last Name', 'Location', 'School District', 'Email', 'URL'];
+		var paramNames = ['first', 'last', 'district', 'location', 'email'];
+		var colHeaders2 = ['First Name', 'Last Name', 'Email', 'URL'];
+		var paramNames2 = ['first', 'last', 'email'];
 		var csvTable = new Handsontable(document.getElementById('csv'), {
 			data: [colHeaders],
 			colHeaders: colHeaders,
@@ -98,7 +146,6 @@
 
 			$('#file').change(function(e) {
 				var file = e.target.files[0];
-				console.log(file);
 				var papa = Papa.parse(file, {
 					header: false,
 					dynamicTyping: true,
@@ -129,6 +176,11 @@
 						}
 					}
 
+					// add form fields to url
+					$.each($('#event-details').serializeArray(), function(i, field) {
+						url += '&' + field.name + '=' + field.value;
+					});
+
 					// last element, generate URL for row
 					if (j == row.length - 1) {
 						csvTable2.setDataAtCell(i, j, url);
@@ -139,7 +191,6 @@
 
 			$('#file2').change(function(e) {
 				var file = e.target.files[0];
-				console.log(file);
 				var papa = Papa.parse(file, {
 					header: false,
 					dynamicTyping: true,
