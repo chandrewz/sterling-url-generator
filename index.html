@@ -24,6 +24,15 @@
 				<p>Copy and paste the data or import a .csv</p>
 				<p>The imported .csv needs to have the same column headers as the table (First Name, Last Name, Email, Phone, URL)</p>
 				<input type="file" id="file">
+				Choose reply email
+				<select id="reply">
+					<option></option>
+					<option>hayden@s-nfg.com</option>
+					<option>ethan@s-nfg.com</option>
+					<option>rory@s-nfg.com</option>
+					<option>Madison@s-nfg.com</option>
+					<option>brody@s-nfg.com</option>
+				</select>
 				<div id="csv"></div>
 				<button id="csv-generate">Generate URLs</button>
 			</div>
@@ -72,6 +81,11 @@
 						} else if (row[j]) {
 							url += '&' + paramNames[j] + '=' + row[j];
 						}
+					}
+
+					// if reply email is select
+					if ($('#reply').val() != '') {
+						url += '&reply=' + $('#reply').val();
 					}
 
 					// last element, generate URL for row
